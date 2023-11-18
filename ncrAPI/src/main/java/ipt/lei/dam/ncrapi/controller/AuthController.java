@@ -20,6 +20,7 @@ public class AuthController {
 
     @PostMapping("/users")
     public List<User> getAllUsers() {
+        //test return all users
         System.out.println(userService.getAllUsers());
         return userService.getAllUsers();
     }

@@ -1,4 +1,4 @@
-package ipt.lei.dam.ncrapi.infra.security;
+package ipt.lei.dam.ncrapi.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

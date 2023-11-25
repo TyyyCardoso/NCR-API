@@ -1,4 +1,4 @@
-package ipt.lei.dam.ncrapi.infra.security;
+package ipt.lei.dam.ncrapi.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

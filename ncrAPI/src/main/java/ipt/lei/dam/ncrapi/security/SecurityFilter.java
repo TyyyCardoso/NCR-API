@@ -1,4 +1,4 @@
-package ipt.lei.dam.ncrapi.infra.security;
+package ipt.lei.dam.ncrapi.security;
 
 import ipt.lei.dam.ncrapi.database.repos.UserRepository;
 import jakarta.servlet.FilterChain;

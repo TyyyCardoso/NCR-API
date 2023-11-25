@@ -1,4 +1,4 @@
-package ipt.lei.dam.ncrapi.services;
+package ipt.lei.dam.ncrapi.database.services;
 
 import ipt.lei.dam.ncrapi.database.entities.User;
 import ipt.lei.dam.ncrapi.database.repos.UserRepository;

@@ -1,12 +1,11 @@
-package ipt.lei.dam.ncrapi.controller;
+package ipt.lei.dam.ncrapi.controller.authentication;
 
-import ipt.lei.dam.ncrapi.bo.AuthBO;
 import ipt.lei.dam.ncrapi.database.entities.User;
 import ipt.lei.dam.ncrapi.dto.login.LoginDTO;
-import ipt.lei.dam.ncrapi.dto.RegisterDTO;
+import ipt.lei.dam.ncrapi.dto.register.RegisterDTO;
 import ipt.lei.dam.ncrapi.dto.login.LoginResponseDTO;
-import ipt.lei.dam.ncrapi.infra.security.TokenService;
-import ipt.lei.dam.ncrapi.services.UserService;
+import ipt.lei.dam.ncrapi.security.TokenService;
+import ipt.lei.dam.ncrapi.database.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

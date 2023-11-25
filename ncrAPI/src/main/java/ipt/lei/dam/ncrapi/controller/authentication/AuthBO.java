@@ -1,4 +1,4 @@
-package ipt.lei.dam.ncrapi.bo;
+package ipt.lei.dam.ncrapi.controller.authentication;
 
 import ipt.lei.dam.ncrapi.database.entities.User;
 import ipt.lei.dam.ncrapi.utils.StringUtils;

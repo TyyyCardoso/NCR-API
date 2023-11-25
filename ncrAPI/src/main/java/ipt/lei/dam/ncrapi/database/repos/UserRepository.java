@@ -9,7 +9,10 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
+    //Gets user by email
+    User getUserByEmail(String email);
+
     @Override
-    List<User> findAll();
+    <S extends User> S save(S entity);
 }
 

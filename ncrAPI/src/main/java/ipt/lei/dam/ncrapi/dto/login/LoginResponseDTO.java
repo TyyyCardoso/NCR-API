@@ -1,2 +1,4 @@
-package ipt.lei.dam.ncrapi.dto.login;public class LoginResponseDTO {
+package ipt.lei.dam.ncrapi.dto.login;
+
+public record LoginResponseDTO(String token) {
 }

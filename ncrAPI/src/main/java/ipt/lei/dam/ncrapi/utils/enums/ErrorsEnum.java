@@ -9,7 +9,10 @@ public enum ErrorsEnum {
     ACCOUNT_LOCKED("00002","Conta bloqueada. Por favor, tente novamente mais tarde."),
     UNKNOWN_ERROR("00003","Ocorreu um erro inesperado. Por favor, tente novamente."),
     NETWORK_ERROR("00004","Erro de rede. Por favor, verifique sua conexão."),
-    SEND_OTP_ERROR("00005","Erro ao enviar código. Por favor, tente novamente.");
+    SEND_OTP_ERROR("00005","Erro ao enviar código. Por favor, tente novamente."),
+    VALIDATE_OTP_ERROR("00006","Erro ao validar código. Por favor, tente novamente."),
+    CHANGE_PASSWORD_ERROR("00007","Erro ao alterar password. Por favor, tente novamente."),
+    EMAIL_EXISTS_ERROR("00008","Uma conta com esse email já existe. Por favor, tente outro.");
 
 
     private final String errorCode;

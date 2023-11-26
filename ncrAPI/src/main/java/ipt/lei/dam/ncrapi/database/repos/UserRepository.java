@@ -12,7 +12,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     //Gets user by email
     User getUserByEmail(String email);
 
+    User getUserById(Integer id);
+
     @Override
     <S extends User> S save(S entity);
+
 }
 

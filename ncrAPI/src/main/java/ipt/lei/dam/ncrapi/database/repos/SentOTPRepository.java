@@ -17,4 +17,6 @@ public interface SentOTPRepository extends JpaRepository<SentOTP, Integer> {
 
     @Query("SELECT s FROM SentOTP s WHERE s.userId = :userId ORDER BY s.createdAt DESC LIMIT 1")
     Optional<SentOTP> findLastOTPByUserID(int userId);
+
+    SentOTP getSentOTPByOtpId(Integer id);
 }

@@ -36,7 +36,14 @@ public class EmailService {
 
     public void sendRecoverPasswordEmail(String toEmail, String OTP) throws MessagingException {
         String subject = "Recuperação de palavra-passe";
-        String htmlBody = ConstantsUtils.htmlEmail.replace("[OTP_CODE]", OTP);
+        String htmlBody = ConstantsUtils.recoverPasswordHTMLEmail.replace("[OTP_CODE]", OTP);
+
+        sendHtmlMessage(toEmail, subject, htmlBody);
+    }
+
+    public void sendConfirmAccountEmail(String toEmail, String OTP) throws MessagingException {
+        String subject = "Confirmação de conta";
+        String htmlBody = ConstantsUtils.confirmAccountHTMLEmail.replace("[OTP_CODE]", OTP);
 
         sendHtmlMessage(toEmail, subject, htmlBody);
     }

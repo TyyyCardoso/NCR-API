@@ -32,6 +32,8 @@ public class Event {
     private Date createdAt;
 
     private Date updatedAt;
+    
+    private String image;
 
     // Getters and Setters
 }

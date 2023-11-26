@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @RequestMapping("/event")
@@ -18,7 +19,7 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    @PostMapping("/all")
+    @GetMapping("/all")
     public ResponseEntity events(){
         return ResponseEntity.ok(eventService.getAllEvents());
     }

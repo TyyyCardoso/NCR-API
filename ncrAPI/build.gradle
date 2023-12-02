@@ -6,7 +6,6 @@ plugins {
 }
 
 group = 'ipt.lei.dam'
-version = '0.0.1-SNAPSHOT'
 
 java {
     sourceCompatibility = '17'

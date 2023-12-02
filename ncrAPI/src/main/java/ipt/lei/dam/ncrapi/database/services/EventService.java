@@ -13,8 +13,17 @@ public class EventService {
     @Autowired
     EventRepository eventRepository;
 
-    public List<Event> getAllEvents(){
+    public List<Event> getAllEvents() {
         return eventRepository.findAll();
+    }
+
+    public Boolean addEvent(Event event) {
+        try {
+            Event savedEvent = eventRepository.save(event);
+            return savedEvent != null;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

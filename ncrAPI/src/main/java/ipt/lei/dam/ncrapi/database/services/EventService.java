@@ -2,6 +2,7 @@ package ipt.lei.dam.ncrapi.database.services;
 
 import ipt.lei.dam.ncrapi.database.entities.Event;
 import ipt.lei.dam.ncrapi.database.repos.EventRepository;
+import ipt.lei.dam.ncrapi.dto.EventDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class EventService {
     public Boolean addEvent(Event event) {
         try {
             Event savedEvent = eventRepository.save(event);
-            return savedEvent != null;
+            return true; 
         } catch (Exception e) {
             return false;
         }

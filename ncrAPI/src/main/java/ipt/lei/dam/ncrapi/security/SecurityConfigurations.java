@@ -36,7 +36,7 @@ public class  SecurityConfigurations {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(antMatcher("/security-servlet/*")).permitAll()
+                        .requestMatchers(mvc.pattern("/security-servlet/*")).permitAll()
                         .requestMatchers(mvc.pattern("/auth/**")).permitAll()
                         //.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         //.requestMatchers(HttpMethod.POST, "/auth/recover").permitAll()

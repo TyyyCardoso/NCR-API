@@ -29,13 +29,6 @@ public class EventController {
     
     @PostMapping
     public ResponseEntity addEvent(@RequestBody EventDTO eventDTO){
-        System.out.println(eventDTO.name());
-        System.out.println(eventDTO.description());
-        System.out.println(eventDTO.date());
-        System.out.println(eventDTO.location());
-        System.out.println(eventDTO.transport().toString());
-        System.out.println(eventDTO.createAt());
-        
         Event event = new Event();
         event.setName(eventDTO.name());
         event.setDescription(eventDTO.description());
@@ -44,12 +37,9 @@ public class EventController {
         event.setTransport(eventDTO.transport());
         event.setCreatedAt(LocalDateTime.now());
         event.setUpdatedAt(LocalDateTime.now());
-        event.setImage("data:image/png;base64," + eventDTO.image());
-        
-        System.out.println(event.toString());
+        event.setImage(eventDTO.image());
     
         return ResponseEntity.ok(eventService.addEvent(event));
-        //return ResponseEntity.ok("");
     }
 
 }

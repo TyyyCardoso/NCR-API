@@ -10,4 +10,4 @@ import java.time.LocalDateTime;
  *
  * @author pcjoa
  */
-public record EventDTO(String name, String description, String date, String location, Boolean transport, String createAt, String updatedAt, String image){}
+public record EventDTO(int id ,String name, String description, String date, String location, Boolean transport, String createdAt, String updatedAt, String image){}

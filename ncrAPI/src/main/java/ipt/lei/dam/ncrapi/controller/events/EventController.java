@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
@@ -39,6 +40,22 @@ public class EventController {
         event.setUpdatedAt(LocalDateTime.now());
         event.setImage(eventDTO.image());
     
+        return ResponseEntity.ok(eventService.addEvent(event));
+    }
+    
+    @PutMapping
+    public ResponseEntity editEvent(@RequestBody EventDTO eventDTO){
+        Event event = new Event();
+        event.setId(eventDTO.id());
+        event.setName(eventDTO.name());
+        event.setDescription(eventDTO.description());
+        event.setDate(LocalDateTime.parse(eventDTO.date()));
+        event.setLocation(eventDTO.location());
+        event.setTransport(eventDTO.transport());
+        event.setCreatedAt(LocalDateTime.parse(eventDTO.createdAt()));
+        event.setUpdatedAt(LocalDateTime.now());
+        event.setImage(eventDTO.image());
+        
         return ResponseEntity.ok(eventService.addEvent(event));
     }
 

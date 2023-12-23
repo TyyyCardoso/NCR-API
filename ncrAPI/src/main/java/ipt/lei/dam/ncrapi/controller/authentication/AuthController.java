@@ -18,6 +18,7 @@ import ipt.lei.dam.ncrapi.database.services.UserService;
 import ipt.lei.dam.ncrapi.services.EmailService;
 import ipt.lei.dam.ncrapi.services.OTPService;
 import ipt.lei.dam.ncrapi.utils.enums.ErrorsEnum;
+import ipt.lei.dam.ncrapi.utils.enums.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,7 +66,9 @@ public class AuthController {
                 emailService.sendConfirmAccountEmail(loggedUser.getEmail(), otpCode);
             }
 
-            return ResponseEntity.ok(new LoginResponseDTO(token, loggedUser.isValidated(), loggedUser.getEmail()));
+            String userType = UserRoles.getRoleByID(Integer.parseInt(loggedUser.getUserType()));
+
+            return ResponseEntity.ok(new LoginResponseDTO(token, loggedUser.isValidated(), loggedUser.getEmail(), loggedUser.getName(), userType, loggedUser.getRegistrationDate().toString(), loggedUser.getImage()));
         } catch (BadCredentialsException e) {
             ErrorsEnum error = ErrorsEnum.INVALID_CREDENTIALS;
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));

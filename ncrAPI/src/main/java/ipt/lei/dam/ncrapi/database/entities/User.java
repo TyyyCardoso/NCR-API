@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.awt.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -48,6 +49,8 @@ public class User implements UserDetails {
     @Column(name = "UpdatedAt")
     private LocalDate updatedAt;
 
+    private String image;
+
     public User(String name, String email, String password){
         this.name = name;
         this.email = email;
@@ -58,7 +61,7 @@ public class User implements UserDetails {
         this.registrationDate = localDate;
         this.createdAt = localDate;
         this.updatedAt = localDate;
-
+        this.image = null;
 
     }
 

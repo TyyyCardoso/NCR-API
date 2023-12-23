@@ -19,13 +19,9 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.getUserByEmail(email);
-    }
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { return userRepository.getUserByEmail(email);}
 
-    public void createNewUser(User user){
-        userRepository.save(user);
-    }
+    public void createNewUser(User user){ userRepository.save(user);}
 
     public User getUserByEmail(String email) {
         return userRepository.getUserByEmail(email);

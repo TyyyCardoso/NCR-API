@@ -38,6 +38,7 @@ public class  SecurityConfigurations {
                         .requestMatchers(mvc.pattern(HttpMethod.POST,"/security-servlet/*")).permitAll()
                         .requestMatchers(mvc.pattern(HttpMethod.POST,"/auth/**")).permitAll()
                         .requestMatchers(mvc.pattern("/event/**")).permitAll()
+                        .requestMatchers(mvc.pattern("/didyouknow/**")).permitAll()
                         //.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         //.requestMatchers(HttpMethod.POST, "/auth/recover").permitAll()
                         //.requestMatchers(HttpMethod.POST, "/auth/login").hasRole("MEMBER")

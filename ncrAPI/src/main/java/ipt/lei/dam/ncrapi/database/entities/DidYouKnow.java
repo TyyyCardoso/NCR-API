@@ -3,9 +3,18 @@ package ipt.lei.dam.ncrapi.database.entities;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "DidYouKnow")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class DidYouKnow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,12 +25,12 @@ public class DidYouKnow {
 
     private String text;
 
-    @Column(name = "References")
+    @Column(name = "Reference")
     private String references;
 
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     // Getters and Setters
 }

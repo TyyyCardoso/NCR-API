@@ -31,6 +31,10 @@ public class UserService implements UserDetailsService {
         return userRepository.getUserById(userID);
     }
 
+    public void save(User user){
+        userRepository.save(user);
+    }
+
     @Transactional
     public void updatePassword(Integer userID, String newPassword) {
         User user = getUserByID(userID);

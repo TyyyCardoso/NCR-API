@@ -39,8 +39,9 @@ public class EventService {
             Optional<Event> event = eventRepository.findById(id);
             if(event != null){
                 eventRepository.deleteById(id);
+                return true; 
             }
-            return true; 
+            return false;
         } catch (Exception e) {
             return false;
         }

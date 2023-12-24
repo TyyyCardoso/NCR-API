@@ -38,6 +38,9 @@ public class Event {
     
     private String image;
 
+    @Transient
+    private boolean isSubscribed;
+
     // Getters and Setters
 
     @Override

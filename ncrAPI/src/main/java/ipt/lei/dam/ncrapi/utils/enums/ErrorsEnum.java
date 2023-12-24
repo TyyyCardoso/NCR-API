@@ -12,7 +12,10 @@ public enum ErrorsEnum {
     SEND_OTP_ERROR("00005","Erro ao enviar código. Por favor, tente novamente."),
     VALIDATE_OTP_ERROR("00006","Erro ao validar código. Por favor, tente novamente."),
     CHANGE_PASSWORD_ERROR("00007","Erro ao alterar password. Por favor, tente novamente."),
-    EMAIL_EXISTS_ERROR("00008","Uma conta com esse email já existe. Por favor, tente outro.");
+    EMAIL_EXISTS_ERROR("00008","Uma conta com esse email já existe. Por favor, tente outro."),
+    ERROR_GETTING_EVENT("00009","Ocorreu um erro ao tentar obter o evento. Por favor, tente mais tarde."),
+    ERROR_GETTING_USER("00010","Ocorreu um erro ao tentar obter o utilizador. Por favor, tente mais tarde."),
+    ERROR_CANCELING_SUBSCRIPTION("00011","Ocorreu um erro ao tentar cancelar a sua ida ao evento. Por favor, tente mais tarde.");
 
 
     private final String errorCode;

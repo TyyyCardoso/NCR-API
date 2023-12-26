@@ -55,12 +55,13 @@ public class EventController {
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
         }
 
-        for(Event evento : listaEventos){
-            evento.setSubscribed(false);
-            if(eventService.checkIfSubscribed(evento, user)){
-                evento.setSubscribed(true);
-            }
-        }
+        List<Event> listaEventosSubscribed = eventService.getAllEventsSubscribed(user);
+
+        listaEventos.stream()
+                .filter(evento -> listaEventosSubscribed.stream()
+                        .anyMatch(subscribedEvent -> subscribedEvent.getId() == evento.getId()))
+                .forEach(evento -> evento.setSubscribed(true));
+
 
         return ResponseEntity.ok(listaEventos);
     }

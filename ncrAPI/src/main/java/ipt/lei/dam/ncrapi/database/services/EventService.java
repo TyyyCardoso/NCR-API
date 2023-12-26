@@ -25,6 +25,10 @@ public class EventService {
         return eventRepository.findAll();
     }
 
+    public List<Event> getAllEventsSubscribed(User user) {
+        return eventRepository.findAllSubscribed(user);
+    }
+
     public Boolean addEvent(Event event) {
         try {
             Event savedEvent = eventRepository.save(event);

@@ -1,5 +1,6 @@
 package ipt.lei.dam.ncrapi.controller.authentication;
 
+import ipt.lei.dam.ncrapi.LoggingInterceptor;
 import ipt.lei.dam.ncrapi.database.entities.SentOTP;
 import ipt.lei.dam.ncrapi.database.entities.User;
 import ipt.lei.dam.ncrapi.database.services.SentOTPService;
@@ -19,6 +20,8 @@ import ipt.lei.dam.ncrapi.services.EmailService;
 import ipt.lei.dam.ncrapi.services.OTPService;
 import ipt.lei.dam.ncrapi.utils.enums.ErrorsEnum;
 import ipt.lei.dam.ncrapi.utils.enums.UserRoles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +51,8 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingInterceptor.class);
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Validated LoginDTO loginRequest) {
         try{
@@ -55,6 +60,8 @@ public class AuthController {
             Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
             String token = tokenService.generateToken((User) authentication.getPrincipal());
+
+            LOGGER.warn("MAKING TOKEN ON LOGIN: " + token);
 
             User loggedUser = userService.getUserByEmail(loginRequest.email());
 

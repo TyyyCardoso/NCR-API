@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,21 +26,27 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
     UserRepository userRepository;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingInterceptor.class);
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = this.recoverToken(request);
-        if(token != null){
-            logger.info("LOGGED TOKEN: " + token);
+        logger.info("LOGGED TOKEN: " + token);
+        if(token != null && SecurityContextHolder.getContext().getAuthentication() == null){
             String email = tokenService.validateToken(token);
             logger.info("LOGGED EMAIL: " + email);
             UserDetails user = userRepository.getUserByEmail(email);
-            logger.info("LOGGED USER: " + user.getUsername());
-
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null , user.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            if(user != null){
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null , user.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }else{
+                logger.warn("ERROR GETTING USER");
+            }
+        }else{
+            logger.warn("ERROR GETTING TOKEN: " + token + " AND AUTHENTICATION CONTEXT: " + SecurityContextHolder.getContext().getAuthentication());
         }
+
         filterChain.doFilter(request, response);
     }
 

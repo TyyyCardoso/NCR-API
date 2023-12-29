@@ -1,4 +1,4 @@
-package ipt.lei.dam.ncrapi;
+package ipt.lei.dam.ncrapi.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

@@ -5,9 +5,10 @@
 package ipt.lei.dam.ncrapi.dto;
 
 import java.time.LocalDateTime;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
  * @author pcjoa
  */
-public record EventDTO(int id ,String name, String description, String date, String location, Boolean transport, String createdAt, String updatedAt, String image){}
+public record EventAddDTO(String name, String description, String date, String location, Boolean transport, MultipartFile image){}

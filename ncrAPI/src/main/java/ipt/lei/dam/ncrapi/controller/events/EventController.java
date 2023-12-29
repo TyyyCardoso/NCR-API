@@ -6,7 +6,7 @@ import ipt.lei.dam.ncrapi.database.entities.User;
 import ipt.lei.dam.ncrapi.database.services.EventService;
 import ipt.lei.dam.ncrapi.database.services.UserService;
 import ipt.lei.dam.ncrapi.dto.ErrorResponseDTO;
-import ipt.lei.dam.ncrapi.dto.EventDTO;
+import ipt.lei.dam.ncrapi.dto.EventAddDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,6 +14,10 @@ import java.time.LocalDateTime;
 import ipt.lei.dam.ncrapi.dto.EventsDTO;
 import ipt.lei.dam.ncrapi.dto.subscribe.SubscribeEventDTO;
 import ipt.lei.dam.ncrapi.utils.enums.ErrorsEnum;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +27,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
 @RequestMapping("/event")
@@ -39,10 +55,13 @@ public class EventController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/all")
-    public ResponseEntity events(@RequestBody EventsDTO eventsDTO){
+    String projectRoot = System.getProperty("user.dir");
+    String uploadDir = projectRoot + "/files/images";
 
-        if(eventsDTO.email().isEmpty()){
+    @PostMapping("/all")
+    public ResponseEntity events(@RequestBody EventsDTO eventsDTO) {
+
+        if (eventsDTO.email().isEmpty()) {
             return ResponseEntity.ok(eventService.getAllEvents());
         }
 
@@ -50,7 +69,7 @@ public class EventController {
 
         User user = userService.getUserByEmail(eventsDTO.email());
 
-        if(user==null){
+        if (user == null) {
             ErrorsEnum error = ErrorsEnum.ERROR_GETTING_USER;
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
         }
@@ -59,28 +78,60 @@ public class EventController {
 
         listaEventos.stream()
                 .filter(evento -> listaEventosSubscribed.stream()
-                        .anyMatch(subscribedEvent -> subscribedEvent.getId() == evento.getId()))
+                .anyMatch(subscribedEvent -> subscribedEvent.getId() == evento.getId()))
                 .forEach(evento -> evento.setSubscribed(true));
-
 
         return ResponseEntity.ok(listaEventos);
     }
-    
+
     @PostMapping
-    public ResponseEntity addEvent(@RequestBody EventDTO eventDTO){
-        Event event = new Event();
-        event.setName(eventDTO.name());
-        event.setDescription(eventDTO.description());
-        event.setDate(LocalDateTime.parse(eventDTO.date()));
-        event.setLocation(eventDTO.location());
-        event.setTransport(eventDTO.transport());
-        event.setCreatedAt(LocalDateTime.now());
-        event.setUpdatedAt(LocalDateTime.now());
-        event.setImage(eventDTO.image());
-    
-        return ResponseEntity.ok(eventService.addEvent(event));
+    public ResponseEntity addEvent(
+            @RequestParam("name") String name,
+            @RequestParam("description") String description,
+            @RequestParam("date") String date,
+            @RequestParam("location") String location,
+            @RequestParam("transport") Boolean transport,
+            @RequestParam(value = "image", required = false) MultipartFile image) {
+        
+
+        try {
+ 
+            // Salvar os outros dados do evento no banco de dados
+            Event event = new Event();
+            event.setName(name);
+            event.setDescription(description);
+            event.setDate(LocalDateTime.parse(date));
+            event.setLocation(location);
+            event.setTransport(transport);
+            event.setCreatedAt(LocalDateTime.now());
+            event.setUpdatedAt(LocalDateTime.now());
+
+            if (image != null && !image.isEmpty()) {
+        
+                // Salvar a imagem em um diretório (altere o diretório conforme necessário)
+                String imageFileName = UUID.randomUUID().toString() + ".jpg";
+
+                File file = new File(uploadDir + "/" + imageFileName);
+                if (!file.exists()) {
+                    file.mkdirs(); // Crie o diretório se ele não existir
+                }
+                image.transferTo(file);
+
+                event.setImage(imageFileName);
+            } else {
+                event.setImage("default_image.jpg");
+            }
+
+            eventService.addEvent(event);
+
+            return ResponseEntity.ok("Evento adicionado com sucesso! Imagem: ");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a imagem.");
+        }
     }
-    
+
+    /*
     @PutMapping
     public ResponseEntity editEvent(@RequestBody EventDTO eventDTO){
         Event event = new Event();
@@ -96,10 +147,10 @@ public class EventController {
         
         return ResponseEntity.ok(eventService.addEvent(event));
     }
-    
+     */
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteEvent(@PathVariable int id){
-         return ResponseEntity.ok(eventService.deleteEvent(id));
+    public ResponseEntity deleteEvent(@PathVariable int id) {
+        return ResponseEntity.ok(eventService.deleteEvent(id));
     }
 
     @PostMapping("subscribe")
@@ -109,17 +160,17 @@ public class EventController {
         EventParticipant eventParticipant = new EventParticipant();
 
         Optional<Event> event = eventService.getEvent(subscribeEventDTO.eventID());
-        if(event.isPresent()){
+        if (event.isPresent()) {
             eventParticipant.setEvent(event.get());
-        }else{
+        } else {
             ErrorsEnum error = ErrorsEnum.ERROR_GETTING_EVENT;
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
         }
 
         User user = userService.getUserByEmail(subscribeEventDTO.email());
-        if(user!=null){
+        if (user != null) {
             eventParticipant.setUser(user);
-        }else{
+        } else {
             ErrorsEnum error = ErrorsEnum.ERROR_GETTING_USER;
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
         }
@@ -137,20 +188,19 @@ public class EventController {
     @PostMapping("cancel")
     public ResponseEntity cancelSubscription(@RequestBody SubscribeEventDTO subscribeEventDTO) {
 
-
         Optional<Event> event = eventService.getEvent(subscribeEventDTO.eventID());
-        if(!event.isPresent()){
+        if (!event.isPresent()) {
             ErrorsEnum error = ErrorsEnum.ERROR_GETTING_EVENT;
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
         }
 
         User user = userService.getUserByEmail(subscribeEventDTO.email());
-        if(user==null){
+        if (user == null) {
             ErrorsEnum error = ErrorsEnum.ERROR_GETTING_USER;
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
         }
 
-        if(eventService.cancelSubscription(event.get(), user)){
+        if (eventService.cancelSubscription(event.get(), user)) {
             return ResponseEntity.ok().build();
         }
 
@@ -158,5 +208,23 @@ public class EventController {
         return ResponseEntity.badRequest().body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
     }
 
+    @GetMapping("/images/{imageName}")
+    public ResponseEntity<Resource> getImage(@PathVariable String imageName) throws IOException {
+        // Construa o caminho completo para a imagem
+        Path imagePath = Paths.get(uploadDir).resolve(imageName);
+        Resource resource = new UrlResource(imagePath.toUri());
+
+        // Verifique se a imagem existe
+        if (resource.exists() && resource.isReadable()) {
+            System.out.println("Image found. Loading it...");
+            MediaType mediaType = MediaType.IMAGE_JPEG;
+            return ResponseEntity.ok()
+                    .contentType(mediaType)
+                    .body(resource);
+        } else {
+            // Retorne uma resposta 404 se a imagem não for encontrada
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }

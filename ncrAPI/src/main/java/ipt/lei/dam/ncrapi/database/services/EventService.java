@@ -5,7 +5,7 @@ import ipt.lei.dam.ncrapi.database.entities.EventParticipant;
 import ipt.lei.dam.ncrapi.database.entities.User;
 import ipt.lei.dam.ncrapi.database.repos.EventParticipantRepository;
 import ipt.lei.dam.ncrapi.database.repos.EventRepository;
-import ipt.lei.dam.ncrapi.dto.EventDTO;
+import ipt.lei.dam.ncrapi.dto.EventAddDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

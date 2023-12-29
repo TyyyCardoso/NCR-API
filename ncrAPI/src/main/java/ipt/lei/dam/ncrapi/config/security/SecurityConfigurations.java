@@ -1,4 +1,4 @@
-package ipt.lei.dam.ncrapi.security;
+package ipt.lei.dam.ncrapi.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -39,6 +39,7 @@ public class  SecurityConfigurations {
                         .requestMatchers(mvc.pattern(HttpMethod.POST,"/auth/**")).permitAll()
                         .requestMatchers(mvc.pattern("/event/**")).permitAll()
                         .requestMatchers(mvc.pattern("/didyouknow/**")).permitAll()
+                        .requestMatchers(mvc.pattern("/**")).permitAll()
                         //.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         //.requestMatchers(HttpMethod.POST, "/auth/recover").permitAll()
                         //.requestMatchers(HttpMethod.POST, "/auth/login").hasRole("MEMBER")

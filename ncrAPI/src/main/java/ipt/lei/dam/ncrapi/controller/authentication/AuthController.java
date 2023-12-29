@@ -1,6 +1,6 @@
 package ipt.lei.dam.ncrapi.controller.authentication;
 
-import ipt.lei.dam.ncrapi.LoggingInterceptor;
+import ipt.lei.dam.ncrapi.config.LoggingInterceptor;
 import ipt.lei.dam.ncrapi.database.entities.SentOTP;
 import ipt.lei.dam.ncrapi.database.entities.User;
 import ipt.lei.dam.ncrapi.database.services.SentOTPService;
@@ -14,7 +14,7 @@ import ipt.lei.dam.ncrapi.dto.register.RegisterResponseDTO;
 import ipt.lei.dam.ncrapi.dto.send.SendOTPDTO;
 import ipt.lei.dam.ncrapi.dto.validate.ValidateOTPDTO;
 import ipt.lei.dam.ncrapi.dto.validate.ValidateOTPResponseDTO;
-import ipt.lei.dam.ncrapi.security.TokenService;
+import ipt.lei.dam.ncrapi.config.security.TokenService;
 import ipt.lei.dam.ncrapi.database.services.UserService;
 import ipt.lei.dam.ncrapi.services.EmailService;
 import ipt.lei.dam.ncrapi.services.OTPService;

@@ -1,4 +1,4 @@
-package ipt.lei.dam.ncrapi;
+package ipt.lei.dam.ncrapi.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

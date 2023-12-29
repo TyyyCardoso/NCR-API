@@ -55,7 +55,8 @@ public class EventController {
     private UserService userService;
 
     String projectRoot = System.getProperty("user.dir");
-    String uploadDir = projectRoot + "/files/images";
+    String uploadDir = projectRoot + "/src/main/resources/files/images";
+
 
     @PostMapping("/all")
     public ResponseEntity events(@RequestBody EventsDTO eventsDTO) {

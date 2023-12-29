@@ -51,6 +51,8 @@ public class User implements UserDetails {
 
     private String image;
 
+    private String about;
+
     public User(String name, String email, String password){
         this.name = name;
         this.email = email;

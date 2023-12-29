@@ -27,6 +27,10 @@ public class UserService implements UserDetailsService {
         return userRepository.getUserByEmail(email);
     }
 
+    public List<User> getAdministrators(){
+        return userRepository.getUsersByUserType("9");
+    }
+
     public User getUserByID(Integer userID) {
         return userRepository.getUserById(userID);
     }

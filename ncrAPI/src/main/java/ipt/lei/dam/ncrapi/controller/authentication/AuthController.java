@@ -75,7 +75,7 @@ public class AuthController {
 
             String userType = UserRoles.getRoleByID(Integer.parseInt(loggedUser.getUserType()));
 
-            return ResponseEntity.ok(new LoginResponseDTO(token, loggedUser.isValidated(), loggedUser.getEmail(), loggedUser.getName(), userType, loggedUser.getRegistrationDate().toString(), loggedUser.getImage()));
+            return ResponseEntity.ok(new LoginResponseDTO(token, loggedUser.isValidated(), loggedUser.getEmail(), loggedUser.getName(), userType, loggedUser.getRegistrationDate().toString(), loggedUser.getImage(), loggedUser.getAbout()));
         } catch (BadCredentialsException e) {
             ErrorsEnum error = ErrorsEnum.INVALID_CREDENTIALS;
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));

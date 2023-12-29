@@ -16,7 +16,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     User getUserByEmail(String email);
 
     User getUserById(Integer id);
-    
+
+    List<User> getUsersByUserType(String userType);
+
     @Override
     <S extends User> S save(S entity);
 

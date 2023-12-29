@@ -8,9 +8,12 @@ import ipt.lei.dam.ncrapi.utils.enums.ErrorsEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/profile")
@@ -37,9 +40,26 @@ public class UserProfileController {
             user.setImage(editProfileDTO.newImage());
         }
 
+        if(!editProfileDTO.newAbout().isEmpty()){
+            user.setAbout(editProfileDTO.newAbout());
+        }
+
         userService.save(user);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/administrator")
+    public ResponseEntity getAdministrators() {
+
+        List<User> user = userService.getAdministrators();
+
+        if(user==null){
+            ErrorsEnum error = ErrorsEnum.ERROR_GETTING_USER;
+            return ResponseEntity.badRequest().body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
+        }
+
+        return ResponseEntity.ok(user);
     }
 
 }

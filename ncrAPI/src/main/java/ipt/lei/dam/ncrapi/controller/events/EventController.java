@@ -6,7 +6,6 @@ import ipt.lei.dam.ncrapi.database.entities.User;
 import ipt.lei.dam.ncrapi.database.services.EventService;
 import ipt.lei.dam.ncrapi.database.services.UserService;
 import ipt.lei.dam.ncrapi.dto.ErrorResponseDTO;
-import ipt.lei.dam.ncrapi.dto.EventAddDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -92,10 +91,8 @@ public class EventController {
             @RequestParam("location") String location,
             @RequestParam("transport") Boolean transport,
             @RequestParam(value = "image", required = false) MultipartFile image) {
-        
 
         try {
- 
             // Salvar os outros dados do evento no banco de dados
             Event event = new Event();
             event.setName(name);
@@ -107,13 +104,13 @@ public class EventController {
             event.setUpdatedAt(LocalDateTime.now());
 
             if (image != null && !image.isEmpty()) {
-        
-                // Salvar a imagem em um diretório (altere o diretório conforme necessário)
+
+                // Gerar nome aleatorio para imagem
                 String imageFileName = UUID.randomUUID().toString() + ".jpg";
 
                 File file = new File(uploadDir + "/" + imageFileName);
                 if (!file.exists()) {
-                    file.mkdirs(); // Crie o diretório se ele não existir
+                    file.mkdirs(); // criar diretoria se nao existir
                 }
                 image.transferTo(file);
 
@@ -124,30 +121,62 @@ public class EventController {
 
             eventService.addEvent(event);
 
-            return ResponseEntity.ok("Evento adicionado com sucesso! Imagem: ");
+            return ResponseEntity.ok("Evento adicionado com sucesso!");
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a imagem.");
         }
     }
 
-    /*
     @PutMapping
-    public ResponseEntity editEvent(@RequestBody EventDTO eventDTO){
-        Event event = new Event();
-        event.setId(eventDTO.id());
-        event.setName(eventDTO.name());
-        event.setDescription(eventDTO.description());
-        event.setDate(LocalDateTime.parse(eventDTO.date()));
-        event.setLocation(eventDTO.location());
-        event.setTransport(eventDTO.transport());
-        event.setCreatedAt(LocalDateTime.parse(eventDTO.createdAt()));
-        event.setUpdatedAt(LocalDateTime.now());
-        event.setImage(eventDTO.image());
-        
-        return ResponseEntity.ok(eventService.addEvent(event));
+    public ResponseEntity editEvent(
+            @RequestParam("id") int id,
+            @RequestParam("name") String name,
+            @RequestParam("description") String description,
+            @RequestParam("date") String date,
+            @RequestParam("location") String location,
+            @RequestParam("transport") Boolean transport,
+            @RequestParam("createdAt") String createdAt,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            @RequestParam("imageFileName") String imageFileName) {
+
+        try {
+            // Salvar os outros dados do evento no banco de dados
+            Event event = new Event();
+            event.setId(id);
+            event.setName(name);
+            event.setDescription(description);
+            event.setDate(LocalDateTime.parse(date));
+            event.setLocation(location);
+            event.setTransport(transport);
+            event.setCreatedAt(LocalDateTime.parse(createdAt));
+            event.setUpdatedAt(LocalDateTime.now());
+
+            if (image != null && !image.isEmpty()) {
+
+                // Gerar nome aleatorio para imagem
+                String imageFileNameFinal = UUID.randomUUID().toString() + ".jpg";
+
+                File file = new File(uploadDir + "/" + imageFileNameFinal);
+                if (!file.exists()) {
+                    file.mkdirs(); // criar diretoria se nao existir
+                }
+                image.transferTo(file);
+
+                event.setImage(imageFileNameFinal);
+            } else {
+                event.setImage(imageFileName);
+            }
+
+            eventService.addEvent(event);
+
+            return ResponseEntity.ok("Evento editado com sucesso!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a imagem.");
+        }
     }
-     */
+
     @DeleteMapping("/{id}")
     public ResponseEntity deleteEvent(@PathVariable int id) {
         return ResponseEntity.ok(eventService.deleteEvent(id));

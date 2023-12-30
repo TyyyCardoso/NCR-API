@@ -58,7 +58,6 @@ public class EventController {
     String projectRoot = System.getProperty("user.dir");
     String uploadDir = projectRoot + "/src/main/resources/files/images";
 
-
     @PostMapping("/all")
     public ResponseEntity events(@RequestBody EventsDTO eventsDTO) {
 
@@ -124,7 +123,7 @@ public class EventController {
             eventService.addEvent(event);
 
             return ResponseEntity.ok("Evento adicionado com sucesso!");
-        } catch (MaxUploadSizeExceededException  e) {
+        } catch (MaxUploadSizeExceededException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Imagem demasiado grande!");
         } catch (IOException e) {
@@ -134,7 +133,7 @@ public class EventController {
     }
 
     @PutMapping
-    public ResponseEntity<String> editEvent(
+    public ResponseEntity editEvent(
             @RequestParam("id") int id,
             @RequestParam("name") String name,
             @RequestParam("description") String description,
@@ -145,44 +144,63 @@ public class EventController {
             @RequestParam(value = "image", required = false) MultipartFile image,
             @RequestParam("imageFileName") String imageFileName) {
 
-        try {
-            // Salvar os outros dados do evento no banco de dados
-            Event event = new Event();
-            event.setId(id);
-            event.setName(name);
-            event.setDescription(description);
-            event.setDate(LocalDateTime.parse(date));
-            event.setLocation(location);
-            event.setTransport(transport);
-            event.setCreatedAt(LocalDateTime.parse(createdAt));
-            event.setUpdatedAt(LocalDateTime.now());
+        // Salvar os outros dados do evento no banco de dados
+        Optional<Event> event = eventService.getEvent(id);
 
-            if (image != null && !image.isEmpty()) {
+        if (event.isPresent()) {
+            try {
+                Event eventToEdit = event.get();
 
-                // Gerar nome aleatorio para imagem
-                String imageFileNameFinal = UUID.randomUUID().toString() + ".jpg";
-
-                File file = new File(uploadDir + "/" + imageFileNameFinal);
-                if (!file.exists()) {
-                    file.mkdirs(); // criar diretoria se nao existir
+                if (!name.isEmpty()) {
+                    eventToEdit.setName(name);
                 }
-                image.transferTo(file);
+                
+                if (!description.isEmpty()) {
+                    eventToEdit.setDescription(description);
+                }
+                
+                if (!date.isEmpty()) {
+                    eventToEdit.setDate(LocalDateTime.parse(date));
+                }
+                
+                if (!location.isEmpty()) {
+                    eventToEdit.setLocation(location);
+                }
+                
+                eventToEdit.setTransport(transport);
+                
+                eventToEdit.setUpdatedAt(LocalDateTime.now());
+                
 
-                event.setImage(imageFileNameFinal);
-            } else {
-                event.setImage(imageFileName);
+                if (image != null && !image.isEmpty()) {
+
+                    // Gerar nome aleatorio para imagem
+                    String imageFileNameFinal = UUID.randomUUID().toString() + ".jpg";
+
+                    File file = new File(uploadDir + "/" + imageFileNameFinal);
+                    if (!file.exists()) {
+                        file.mkdirs(); // criar diretoria se nao existir
+                    }
+                    image.transferTo(file);
+
+                    eventToEdit.setImage(imageFileNameFinal);
+                }
+
+                eventService.addEvent(eventToEdit);
+
+                return ResponseEntity.ok("Evento editado com sucesso!");
+            } catch (MaxUploadSizeExceededException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Imagem demasiado grande!");
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a imagem.");
             }
-
-            eventService.addEvent(event);
-
-            return ResponseEntity.ok("Evento editado com sucesso!");
-        } catch (MaxUploadSizeExceededException  e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Imagem demasiado grande!");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a imagem.");
+        } else {
+            ErrorsEnum error = ErrorsEnum.ERROR_GETTING_USER;
+            return ResponseEntity.badRequest().body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
         }
+
     }
 
     @DeleteMapping("/{id}")

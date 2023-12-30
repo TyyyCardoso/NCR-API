@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -85,7 +86,7 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity addEvent(
+    public ResponseEntity<String> addEvent(
             @RequestParam("name") String name,
             @RequestParam("description") String description,
             @RequestParam("date") String date,
@@ -123,6 +124,9 @@ public class EventController {
             eventService.addEvent(event);
 
             return ResponseEntity.ok("Evento adicionado com sucesso!");
+        } catch (MaxUploadSizeExceededException  e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Imagem demasiado grande!");
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a imagem.");
@@ -130,7 +134,7 @@ public class EventController {
     }
 
     @PutMapping
-    public ResponseEntity editEvent(
+    public ResponseEntity<String> editEvent(
             @RequestParam("id") int id,
             @RequestParam("name") String name,
             @RequestParam("description") String description,
@@ -172,6 +176,9 @@ public class EventController {
             eventService.addEvent(event);
 
             return ResponseEntity.ok("Evento editado com sucesso!");
+        } catch (MaxUploadSizeExceededException  e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Imagem demasiado grande!");
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a imagem.");

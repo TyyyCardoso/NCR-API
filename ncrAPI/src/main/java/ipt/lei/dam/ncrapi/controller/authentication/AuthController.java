@@ -6,6 +6,7 @@ import ipt.lei.dam.ncrapi.database.entities.User;
 import ipt.lei.dam.ncrapi.database.services.SentOTPService;
 import ipt.lei.dam.ncrapi.dto.ErrorResponseDTO;
 import ipt.lei.dam.ncrapi.dto.change.ChangePasswordDTO;
+import ipt.lei.dam.ncrapi.dto.login.BiometricLoginDTO;
 import ipt.lei.dam.ncrapi.dto.login.LoginDTO;
 import ipt.lei.dam.ncrapi.dto.recover.RecoverPasswordDTO;
 import ipt.lei.dam.ncrapi.dto.register.RegisterDTO;
@@ -76,6 +77,41 @@ public class AuthController {
             String userType = UserRoles.getRoleByID(Integer.parseInt(loggedUser.getUserType()));
 
             return ResponseEntity.ok(new LoginResponseDTO(token, loggedUser.isValidated(), loggedUser.getEmail(), loggedUser.getName(), userType, loggedUser.getRegistrationDate().toString(), loggedUser.getImage(), loggedUser.getAbout()));
+        } catch (BadCredentialsException e) {
+            ErrorsEnum error = ErrorsEnum.INVALID_CREDENTIALS;
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
+        } catch (InternalAuthenticationServiceException e) {
+            ErrorsEnum error = ErrorsEnum.INVALID_CREDENTIALS;
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
+        } catch (DisabledException e) {
+            ErrorsEnum error = ErrorsEnum.ACCOUNT_LOCKED;
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
+        } catch (Exception e) {
+            ErrorsEnum error = ErrorsEnum.UNKNOWN_ERROR;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
+        }
+    }
+
+    @PostMapping("/biometricLogin")
+    public ResponseEntity biometricLogin(@RequestBody @Validated BiometricLoginDTO biometricLoginRequest) {
+        try{
+            User user = userService.getUserByEmail(biometricLoginRequest.email());
+
+            String token = tokenService.generateToken(user);
+
+            LOGGER.warn("MAKING TOKEN ON LOGIN: " + token);
+
+            if(!user.isValidated()){
+                String otpCode = otpService.generateOTPCode();
+                SentOTP sentOTP = new SentOTP(user.getId(), otpCode);
+                sentOTPService.createNewOTP(sentOTP);
+
+                emailService.sendConfirmAccountEmail(user.getEmail(), otpCode);
+            }
+
+            String userType = UserRoles.getRoleByID(Integer.parseInt(user.getUserType()));
+
+            return ResponseEntity.ok(new LoginResponseDTO(token, user.isValidated(), user.getEmail(), user.getName(), userType, user.getRegistrationDate().toString(), user.getImage(), user.getAbout()));
         } catch (BadCredentialsException e) {
             ErrorsEnum error = ErrorsEnum.INVALID_CREDENTIALS;
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
@@ -188,7 +224,13 @@ public class AuthController {
                             return ResponseEntity.ok().body(new ValidateOTPResponseDTO(user.getId()));
 
                         }
+                    }else{
+                        error = ErrorsEnum.OTP_EXPIRED;
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
                     }
+                }else{
+                    error = ErrorsEnum.OTP_ALREADY_USED;
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
                 }
             }
         }

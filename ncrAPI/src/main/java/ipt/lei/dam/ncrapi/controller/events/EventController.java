@@ -76,11 +76,19 @@ public class EventController {
 
         List<Event> listaEventosSubscribed = eventService.getAllEventsSubscribed(user);
 
+        for(Event eventoPrinc : listaEventos){
+            for(Event eventoSubs : listaEventosSubscribed){
+                if(eventoPrinc.getId().equals(eventoSubs.getId())){
+                    eventoSubs.setSubscribed(true);
+                }
+            }
+        }
+       /*
         listaEventos.stream()
                 .filter(evento -> listaEventosSubscribed.stream()
                 .anyMatch(subscribedEvent -> subscribedEvent.getId() == evento.getId()))
                 .forEach(evento -> evento.setSubscribed(true));
-
+*/
         return ResponseEntity.ok(listaEventos);
     }
 

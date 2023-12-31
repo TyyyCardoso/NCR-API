@@ -4,9 +4,9 @@ import lombok.Getter;
 
 public enum UserRoles {
 
-    STUDENT(7, "student"),
-    MEMBER(8, "member"),
-    ADMIN(9,"admin");
+    STUDENT(7, "ESTUDANTE"),
+    MEMBER(8, "MEMBRO"),
+    ADMIN(9,"ADMINISTRADOR");
 
     @Getter
     private int roleID;

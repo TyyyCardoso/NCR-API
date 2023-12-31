@@ -40,7 +40,8 @@ public class EventService {
     public Boolean deleteEvent(int id){
         try {
             Optional<Event> event = eventRepository.findById(id);
-            if(event != null){
+            if(event.isPresent()){
+                eventParticipantRepository.deleteAllByEventId(event.get());
                 eventRepository.deleteById(id);
                 return true; 
             }

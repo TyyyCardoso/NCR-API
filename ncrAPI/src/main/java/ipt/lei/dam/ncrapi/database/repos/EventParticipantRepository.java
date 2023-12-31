@@ -20,6 +20,11 @@ public interface EventParticipantRepository extends JpaRepository<EventParticipa
     @Override
     <S extends EventParticipant> S save(S entity);
 
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM EventParticipant s WHERE s.event = :event")
+    void deleteAllByEventId(Event event);
+
     @Query("SELECT s FROM EventParticipant s WHERE s.event = :event AND s.user = :user AND s.canceled = :canceled")
     EventParticipant findSusbcribedEventByUser(Event event, User user, boolean canceled);
 

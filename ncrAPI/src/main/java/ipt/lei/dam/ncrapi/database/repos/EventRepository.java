@@ -14,7 +14,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     @Override
     List<Event> findAll();
 
-    @Query("SELECT s FROM Event s INNER JOIN EventParticipant ep ON s = ep.event WHERE ep.user = :user ORDER BY s.createdAt DESC")
+    @Query("SELECT s FROM Event s INNER JOIN EventParticipant ep ON s = ep.event WHERE ep.user = :user AND ep.canceled = false  ORDER BY s.createdAt DESC")
     List<Event> findAllSubscribed(User user);
 
     @Override

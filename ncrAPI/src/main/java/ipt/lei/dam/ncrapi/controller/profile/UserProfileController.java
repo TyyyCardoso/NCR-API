@@ -2,6 +2,7 @@ package ipt.lei.dam.ncrapi.controller.profile;
 
 import ipt.lei.dam.ncrapi.database.entities.User;
 import ipt.lei.dam.ncrapi.database.services.UserService;
+import ipt.lei.dam.ncrapi.dto.DefaultResponseDTO;
 import ipt.lei.dam.ncrapi.dto.ErrorResponseDTO;
 import ipt.lei.dam.ncrapi.dto.editprofile.EditProfileDTO;
 import ipt.lei.dam.ncrapi.utils.enums.ErrorsEnum;
@@ -69,8 +70,18 @@ public class UserProfileController {
             }
 
             userService.save(user);
-
-            return ResponseEntity.ok().build();
+            
+            if(user.getImage() != null && !user.getImage().isEmpty()){
+                System.out.println("returning with image name: " + user.getImage());
+                return ResponseEntity.ok().body(new DefaultResponseDTO(200, user.getImage()));
+            }
+             
+            else{
+                System.out.println("returning no image name");
+                return ResponseEntity.ok().build();
+            }
+                
+            
         } catch (MaxUploadSizeExceededException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Imagem demasiado grande!");

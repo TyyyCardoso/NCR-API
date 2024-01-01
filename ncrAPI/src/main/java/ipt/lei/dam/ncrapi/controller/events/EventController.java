@@ -206,7 +206,7 @@ public class EventController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a imagem.");
             }
         } else {
-            ErrorsEnum error = ErrorsEnum.ERROR_GETTING_USER;
+            ErrorsEnum error = ErrorsEnum.ERROR_GETTING_EVENT;
             return ResponseEntity.badRequest().body(new ErrorResponseDTO(error.getErrorCode(), error.getMessage()));
         }
 

@@ -8,10 +8,7 @@ package ipt.lei.dam.ncrapi.dto;
  *
  * @author pcjoa
  */
-public record DidYouKnowDTO(
-        int id,
+public record DidYouKnowAddDTO(
         String title,
         String text,
-        String references, 
-        String createdAt,
-        String updatedAt) {}
+        String references) {}

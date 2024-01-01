@@ -43,5 +43,9 @@ public class DidYouKnowService {
             return false;
         }
     }
+    
+    public Optional<DidYouKnow> getDidYouKnow(int id){
+        return didYouKnowRepository.findById(id);
+    }
 
 }

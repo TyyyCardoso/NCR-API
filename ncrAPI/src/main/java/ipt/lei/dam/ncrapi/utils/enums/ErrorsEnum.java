@@ -18,7 +18,8 @@ public enum ErrorsEnum {
     ERROR_CANCELING_SUBSCRIPTION("00011","Ocorreu um erro ao tentar cancelar a sua ida ao evento. Por favor, tente mais tarde."),
     ERROR_GETTING_STAFF("00011","Ocorreu um erro ao tentar obter o staff. Por favor, tente mais tarde."),
     OTP_ALREADY_USED("00012","O código já não é válido. Por favor, tente novamente."),
-    OTP_EXPIRED("00013","O código já expirou. Por favor, tente novamente.");
+    OTP_EXPIRED("00013","O código já expirou. Por favor, tente novamente."),
+    ERROR_GETTING_DIDYOUKNOW("00014","Ocorreu um erro ao tentar obter o sabias que. Por favor, tente mais tarde.");
 
 
     private final String errorCode;

@@ -5,6 +5,7 @@ import ipt.lei.dam.ncrapi.database.entities.EventParticipant;
 import ipt.lei.dam.ncrapi.database.entities.User;
 import ipt.lei.dam.ncrapi.database.services.EventService;
 import ipt.lei.dam.ncrapi.database.services.UserService;
+import ipt.lei.dam.ncrapi.dto.DefaultResponseDTO;
 import ipt.lei.dam.ncrapi.dto.ErrorResponseDTO;
 
 import java.time.LocalDate;
@@ -93,7 +94,7 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addEvent(
+    public ResponseEntity addEvent(
             @RequestParam("name") String name,
             @RequestParam("description") String description,
             @RequestParam("date") String date,
@@ -130,7 +131,7 @@ public class EventController {
 
             eventService.addEvent(event);
 
-            return ResponseEntity.ok("Evento adicionado com sucesso!");
+            return ResponseEntity.ok().body(new DefaultResponseDTO(200, "Evento criado com sucesso"));
         } catch (MaxUploadSizeExceededException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Imagem demasiado grande!");

@@ -197,7 +197,7 @@ public class EventController {
 
                 eventService.addEvent(eventToEdit);
 
-                return ResponseEntity.ok("Evento editado com sucesso!");
+                return ResponseEntity.ok().body(new DefaultResponseDTO(200, "Evento editado com sucesso"));
             } catch (MaxUploadSizeExceededException e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("Imagem demasiado grande!");

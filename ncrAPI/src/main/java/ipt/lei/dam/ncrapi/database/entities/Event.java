@@ -25,8 +25,9 @@ public class Event {
 
     private String description;
 
-    @Column(name = "Date")
-    private LocalDateTime date;
+    private LocalDateTime initDate;
+
+    private LocalDateTime endDate;
 
     private String location;
 
@@ -46,7 +47,7 @@ public class Event {
     @Override
     public String toString() {
         return "Event{" + "id=" + id + ", name=" + name + ", description=" 
-                + description + ", date=" + date + ", location=" + location 
+                + description + ", initial date=" + initDate + ", end date=" + endDate + ", location=" + location
                 + ", transport=" + transport + ", createdAt=" + createdAt 
                 + ", updatedAt=" + updatedAt + ", image=" + ((image==null) ? "NoImage" : "YesImage") + "}";
     }

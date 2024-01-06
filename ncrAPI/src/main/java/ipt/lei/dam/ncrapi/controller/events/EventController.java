@@ -97,7 +97,8 @@ public class EventController {
     public ResponseEntity addEvent(
             @RequestParam("name") String name,
             @RequestParam("description") String description,
-            @RequestParam("date") String date,
+            @RequestParam("initDate") String initDate,
+            @RequestParam("endDate") String endDate,
             @RequestParam("location") String location,
             @RequestParam("transport") Boolean transport,
             @RequestParam(value = "image", required = false) MultipartFile image) {
@@ -107,7 +108,10 @@ public class EventController {
             Event event = new Event();
             event.setName(name);
             event.setDescription(description);
-            event.setDate(LocalDateTime.parse(date));
+            event.setInitDate(LocalDateTime.parse(initDate));
+            if(endDate!=null){
+                event.setEndDate(LocalDateTime.parse(endDate));
+            }
             event.setLocation(location);
             event.setTransport(transport);
             event.setCreatedAt(LocalDateTime.now());
@@ -146,7 +150,8 @@ public class EventController {
             @RequestParam("id") int id,
             @RequestParam("name") String name,
             @RequestParam("description") String description,
-            @RequestParam("date") String date,
+            @RequestParam("initDate") String initDate,
+            @RequestParam("endDate") String endDate,
             @RequestParam("location") String location,
             @RequestParam("transport") Boolean transport,
             @RequestParam("createdAt") String createdAt,
@@ -168,8 +173,12 @@ public class EventController {
                     eventToEdit.setDescription(description);
                 }
                 
-                if (!date.isEmpty()) {
-                    eventToEdit.setDate(LocalDateTime.parse(date));
+                if (!initDate.isEmpty()) {
+                    eventToEdit.setInitDate(LocalDateTime.parse(initDate));
+                }
+
+                if (!endDate.equals("null")) {
+                    eventToEdit.setEndDate(LocalDateTime.parse(endDate));
                 }
                 
                 if (!location.isEmpty()) {

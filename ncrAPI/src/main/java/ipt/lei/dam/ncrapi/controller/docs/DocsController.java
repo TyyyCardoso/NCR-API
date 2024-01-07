@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,6 +37,12 @@ public class DocsController {
     public ResponseEntity docs() {
         List<Docs> documents = docsService.getAllDocs();
         return ResponseEntity.ok(documents);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteDocs(@PathVariable int id) {
+        docsService.deleteDoc(id);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/uploadSchedule")

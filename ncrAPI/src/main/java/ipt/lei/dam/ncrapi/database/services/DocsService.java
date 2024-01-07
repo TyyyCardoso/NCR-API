@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DocsService {
@@ -19,5 +20,10 @@ public class DocsService {
 
     public Docs saveDoc(Docs doc){
         return docsRepository.save(doc);
+    }
+
+    public void deleteDoc(int id){
+        Optional<Docs> doc = docsRepository.findById(id);
+        docsRepository.delete(doc.get());
     }
 }

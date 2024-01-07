@@ -34,7 +34,7 @@ public class DocsController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingInterceptor.class);
     String projectRoot = System.getProperty("user.dir");
-    String uploadDir = projectRoot + "/src/main/resources/static/files/docs";
+    String uploadDir = projectRoot + "/webapps/ncrAPI/WEB-INF/classes/static/files/docs";
 
     @GetMapping("/all")
     public ResponseEntity docs() {

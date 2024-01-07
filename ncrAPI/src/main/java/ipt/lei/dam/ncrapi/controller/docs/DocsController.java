@@ -1,10 +1,13 @@
 package ipt.lei.dam.ncrapi.controller.docs;
 
+import ipt.lei.dam.ncrapi.config.LoggingInterceptor;
 import ipt.lei.dam.ncrapi.database.entities.Docs;
 import ipt.lei.dam.ncrapi.database.entities.Event;
 import ipt.lei.dam.ncrapi.database.services.DidYouKnowService;
 import ipt.lei.dam.ncrapi.database.services.DocsService;
 import ipt.lei.dam.ncrapi.dto.DefaultResponseDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +32,7 @@ public class DocsController {
     @Autowired
     private DocsService docsService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingInterceptor.class);
     String projectRoot = System.getProperty("user.dir");
     String uploadDir = projectRoot + "/src/main/resources/static/files/docs";
 
@@ -58,7 +62,9 @@ public class DocsController {
                 String fileName = UUID.randomUUID() + ".pdf";
 
                 File file = new File(uploadDir + "/" + fileName);
+                LOGGER.warn(uploadDir + "/" + fileName);
                 if (!file.exists()) {
+                    LOGGER.warn("A criar");
                     file.mkdirs(); // criar diretoria se nao existir
                 }
                 pdf.transferTo(file);

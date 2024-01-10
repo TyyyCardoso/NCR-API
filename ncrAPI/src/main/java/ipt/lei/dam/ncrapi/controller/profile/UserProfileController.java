@@ -71,7 +71,7 @@ public class UserProfileController {
 
             userService.save(user);
             
-            if(user.getImage() != null && !user.getImage().isEmpty()){
+            if(null != user.getImage() && !user.getImage().isEmpty()){
                 System.out.println("returning with image name: " + user.getImage());
                 return ResponseEntity.ok().body(new DefaultResponseDTO(200, user.getImage()));
             }

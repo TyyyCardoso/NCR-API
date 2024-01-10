@@ -78,7 +78,7 @@ public class UserProfileController {
              
             else{
                 System.out.println("returning no image name");
-                return ResponseEntity.ok().build();
+                return ResponseEntity.ok().body(new DefaultResponseDTO(200, ""));
             }
                 
             
